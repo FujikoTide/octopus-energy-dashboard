@@ -1,9 +1,5 @@
 import 'server-only'
-import {
-  EnergyConsumption,
-  EnergyName,
-  OctopusApiResult,
-} from '../types/energy'
+import { EnergyConsumption, EnergyName } from '../types/energy'
 
 import { sampleElectricityData } from '@/data/sample-electric-data'
 import { sampleGasData } from '@/data/sample-gas-data'
