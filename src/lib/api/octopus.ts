@@ -27,7 +27,7 @@ export class OctopusEnergy {
     this.baseUrl = 'https://api.octopus.energy/v1/'
   }
 
-  async get(energy: EnergyName): Promise<OctopusApiResult<EnergyConsumption>> {
+  async get(energy: EnergyName): Promise<EnergyConsumption> {
     enum dataType {
       'electricity' = 'electricity-meter-points',
       'gas' = 'gas-meter-points',
@@ -35,9 +35,7 @@ export class OctopusEnergy {
 
     if (development_mode) {
       if (this.API_KEY === '') {
-        return energy === 'electricity'
-          ? (sampleElectricityData as unknown as OctopusApiResult<EnergyConsumption>)
-          : (sampleGasData as unknown as OctopusApiResult<EnergyConsumption> as unknown as OctopusApiResult<EnergyConsumption>)
+        return energy === 'electricity' ? sampleElectricityData : sampleGasData
       }
     }
 

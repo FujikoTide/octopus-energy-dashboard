@@ -11,27 +11,27 @@ export function isEnergyName(x: unknown): x is EnergyName {
   return typeof x === 'string' && ENERGY_SET.has(x as EnergyName)
 }
 
-export type OctopusApiResult<T> = OctopusApiOk<T> | OctopusApiError<T>
+export type OctopusApiResult<T> = OctopusApiOk<T> | OctopusApiError
 
 export type OctopusApiOk<T> = {
   ok: true
   data: T
 }
 
-export type OctopusApiError<T> = {
+export type OctopusApiError = {
   ok: false
-  error: T
+  error: string
 }
 
 export interface EnergyConsumption {
   count: number
-  next: string
-  previous: string
+  next: string | null
+  previous: string | null
   results: EnergyRecord[]
 }
 
 export interface EnergyRecord {
   consumption: number
-  interval_start: Date
-  interval_end: Date
+  interval_start: string
+  interval_end: string
 }
