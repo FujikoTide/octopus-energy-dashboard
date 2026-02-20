@@ -1,12 +1,12 @@
 import { EnergyType } from '@/lib/types/energy'
-import TestOctopus from './test-octopus'
+import EnergyPanel from '../components/charts/energy-panel'
 
 export default function Home() {
   return (
     <main>
       <h1>Test</h1>
-      <TestOctopus energy={EnergyType.electricity} />
-      <TestOctopus energy={EnergyType.gas} />
+      <EnergyPanel energy={EnergyType.electricity} />
+      <EnergyPanel energy={EnergyType.gas} />
     </main>
   )
 }

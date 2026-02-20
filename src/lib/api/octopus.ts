@@ -1,5 +1,9 @@
 import 'server-only'
-import { EnergyName } from '../types/energy'
+import {
+  EnergyConsumption,
+  EnergyName,
+  OctopusApiResult,
+} from '../types/energy'
 
 export class OctopusEnergy {
   private readonly API_KEY: string
@@ -18,7 +22,7 @@ export class OctopusEnergy {
     this.baseUrl = 'https://api.octopus.energy/v1/'
   }
 
-  async get(energy: EnergyName): Promise<unknown> {
+  async get(energy: EnergyName): Promise<OctopusApiResult<EnergyConsumption>> {
     enum dataType {
       'electricity' = 'electricity-meter-points',
       'gas' = 'gas-meter-points',
@@ -44,11 +48,15 @@ export class OctopusEnergy {
     const url = `${this.baseUrl}${dataType[energy]}/${MPAN}/meters/${SERIAL}/consumption/`
 
     console.log(url)
+    console.log('Upstream fetch starting', new Date().toISOString())
 
     const res = await fetch(url, {
       headers: {
         Accept: 'application/json',
         Authorization: `Basic ${basic}`,
+      },
+      next: {
+        revalidate: 30,
       },
     })
 

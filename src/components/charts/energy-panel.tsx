@@ -7,7 +7,9 @@ type EnergyProps = {
   energy: EnergyName
 }
 
-export default function TestOctopus({ energy }: EnergyProps) {
+// export type
+
+export default function EnergyPanel({ energy }: EnergyProps) {
   const { data, error, loading } = useOctopus(energy)
 
   if (loading) {

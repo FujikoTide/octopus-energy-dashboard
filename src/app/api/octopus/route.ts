@@ -1,15 +1,14 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { OctopusEnergy } from '@/lib/api/octopus'
-import { EnergyName } from '@/lib/types/energy'
-
-type OctopusApiResult = {
-  ok: true
-  data: unknown
-}
+import {
+  EnergyConsumption,
+  EnergyName,
+  OctopusApiResult,
+} from '@/lib/types/energy'
 
 export async function GET(request: NextRequest) {
   const octopus = new OctopusEnergy()
   const energy = request.nextUrl.searchParams.get('energyType')
   const data = await octopus.get(energy as EnergyName)
-  return NextResponse.json<OctopusApiResult>({ ok: true, data })
+  return NextResponse.json<OctopusApiResult<EnergyConsumption>>(data)
 }
