@@ -72,12 +72,4 @@ export class OctopusEnergy {
     }
     return await res.json()
   }
-
-  getSampleElectricityData() {
-    return sampleElectricityData
-  }
-
-  getSampleGasData() {
-    return sampleGasData
-  }
 }
