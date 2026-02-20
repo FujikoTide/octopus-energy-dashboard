@@ -7,12 +7,9 @@ type OctopusApiResult = {
   data: unknown
 }
 
-export async function GET(
-  request: NextRequest,
-  context: RouteContext<'/api/octopus/[energy]'>,
-) {
+export async function GET(request: NextRequest) {
   const octopus = new OctopusEnergy()
-  const { energy } = await context.params
+  const energy = request.nextUrl.searchParams.get('energyType')
   const data = await octopus.get(energy as EnergyName)
   return NextResponse.json<OctopusApiResult>({ ok: true, data })
 }

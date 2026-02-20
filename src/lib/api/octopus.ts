@@ -32,10 +32,10 @@ export class OctopusEnergy {
     let MPAN = ''
     let SERIAL = ''
 
-    if ((energy = 'electricity')) {
+    if (energy === 'electricity') {
       MPAN = this.ELECTRICITY_MPAN
       SERIAL = this.ELECTRICITY_SERIAL
-    } else if ((energy = 'gas')) {
+    } else if (energy === 'gas') {
       MPAN = this.GAS_MPAN
       SERIAL = this.GAS_SERIAL
     }
