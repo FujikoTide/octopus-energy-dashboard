@@ -5,6 +5,11 @@ import {
   OctopusApiResult,
 } from '../types/energy'
 
+import { sampleElectricityData } from '@/data/sample-electric-data'
+import { sampleGasData } from '@/data/sample-gas-data'
+
+const development_mode = true
+
 export class OctopusEnergy {
   private readonly API_KEY: string
   private readonly ELECTRICITY_MPAN: string
@@ -26,6 +31,14 @@ export class OctopusEnergy {
     enum dataType {
       'electricity' = 'electricity-meter-points',
       'gas' = 'gas-meter-points',
+    }
+
+    if (development_mode) {
+      if (this.API_KEY === '') {
+        return energy === 'electricity'
+          ? (sampleElectricityData as unknown as OctopusApiResult<EnergyConsumption>)
+          : (sampleGasData as unknown as OctopusApiResult<EnergyConsumption> as unknown as OctopusApiResult<EnergyConsumption>)
+      }
     }
 
     const apiKey = this.API_KEY
@@ -64,5 +77,13 @@ export class OctopusEnergy {
       throw new Error(`HTTP ${res.status}`)
     }
     return await res.json()
+  }
+
+  getSampleElectricityData() {
+    return sampleElectricityData
+  }
+
+  getSampleGasData() {
+    return sampleGasData
   }
 }
