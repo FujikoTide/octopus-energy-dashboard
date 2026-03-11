@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   try {
     const octopus = new OctopusEnergy()
     const energy = request.nextUrl.searchParams.get('energyType')
-    const data = await octopus.get(energy as EnergyName)
+    const data = await octopus.getEnergyConsumption(energy as EnergyName)
     return NextResponse.json<OctopusApiResult<unknown>>({ ok: true, data })
   } catch (e) {
     return NextResponse.json<OctopusApiResult<unknown>>(

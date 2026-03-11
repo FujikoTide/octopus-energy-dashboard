@@ -7,6 +7,7 @@ import { sampleGasData } from '@/data/sample-gas-data'
 const development_mode = true
 
 export class OctopusEnergy {
+  private readonly ACCOUNT_NUMBER: string
   private readonly API_KEY: string
   private readonly ELECTRICITY_MPAN: string
   private readonly ELECTRICITY_SERIAL: string
@@ -15,6 +16,7 @@ export class OctopusEnergy {
   private readonly baseUrl: string
 
   constructor() {
+    this.ACCOUNT_NUMBER = process.env.ACCOUNT_NUMBER ?? ''
     this.API_KEY = process.env.API_KEY ?? ''
     this.ELECTRICITY_MPAN = process.env.ELECTRICITY_MPAN ?? ''
     this.ELECTRICITY_SERIAL = process.env.ELECTRICITY_SERIAL ?? ''
@@ -23,7 +25,7 @@ export class OctopusEnergy {
     this.baseUrl = 'https://api.octopus.energy/v1/'
   }
 
-  async get(energy: EnergyName): Promise<EnergyConsumption> {
+  async getEnergyConsumption(energy: EnergyName): Promise<EnergyConsumption> {
     enum dataType {
       'electricity' = 'electricity-meter-points',
       'gas' = 'gas-meter-points',
@@ -33,11 +35,6 @@ export class OctopusEnergy {
       if (this.API_KEY === '') {
         return energy === 'electricity' ? sampleElectricityData : sampleGasData
       }
-    }
-
-    const apiKey = this.API_KEY
-    if (!apiKey) {
-      throw new Error('Missing Api Key')
     }
 
     let MPAN = ''
@@ -51,25 +48,41 @@ export class OctopusEnergy {
       SERIAL = this.GAS_SERIAL
     }
 
-    const basic = Buffer.from(`${apiKey}:`).toString('base64')
     const url = `${this.baseUrl}${dataType[energy]}/${MPAN}/meters/${SERIAL}/consumption/`
 
     console.log(url)
     console.log('Upstream fetch starting', new Date().toISOString())
 
+    const res = await this.fetchOctopusDataFromAPI(url)
+
+    return await res.json()
+  }
+
+  async getAccountInformation() {
+    const accountNumber = this.ACCOUNT_NUMBER
+    const url = `${this.baseUrl}$accounts/${accountNumber}/`
+
+    const res = await this.fetchOctopusDataFromAPI(url)
+
+    return await res.json()
+  }
+
+  async fetchOctopusDataFromAPI(url: string) {
+    const apiKey = this.API_KEY
+    if (!apiKey) {
+      throw new Error('Missing Api Key')
+    }
+    const basic = Buffer.from(`${apiKey}:`).toString('base64')
     const res = await fetch(url, {
       headers: {
         Accept: 'application/json',
         Authorization: `Basic ${basic}`,
       },
-      next: {
-        revalidate: 30,
-      },
     })
-
     if (!res.ok) {
       throw new Error(`HTTP ${res.status}`)
     }
-    return await res.json()
+
+    return res
   }
 }
